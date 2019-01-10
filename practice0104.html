@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+    *{margin: 0; padding: 0;}
+    header{width: 100vW; height: 100vh; min-width: 1300px; min-height: 810px; overflow: hidden;}
+    header ul{width: 500%; height: 100%; position: relative; left: 0; 
+    transition: left 1s ease-out;
+    }
+    header ul li{width: 100vw; height: 100%; display: inline-block; float: left;}
+    #page1{background-color: pink;}
+    #page2{background-color: plum;}
+    #page3{background-color: palevioletred;}
+    #page4{background-color: purple;}
+    img{width: 80vw; height: 80%; margin: 0 auto;}
+
+    </style>
+</head>
+<body>
+    <header>
+        <ul>
+            <li id="page1"><img src="ka01.jpg" alt="" ></li>
+            <li id="page2"><img src="ka02.jpg" alt="" ></li>
+            <li id="page3"><img src="ka03.jpg" alt="" ></li>
+            <li id="page4"><img src="ka04.jpg" alt="" ></li>
+        </ul>
+    </header>
+</body>
+<script>
+var header_width = $("header").width();
+var moving = header_width*5/10; //ul태그 총크기 및 움직임 분할 
+var wheel_count = 0;  //휠 움직임량 측정 및 위치포지션 카운트-페이지 카운트수를 주어 각페이지로 이동가능하게 
+var scrollEvent = false;  //휠 중복입력 방지를 위한 블리언변수
+
+    //마우스 휠이 작동되면 자동으로 실행되는 명령
+    $("header").on('mousewheel', function(c){
+        c.preventDefault();//브라우저에서 기본으로 제공하는 휠 이벤트 제거-딸려오는 상하 스크롤 없애기  
+        var wheel = c.originalEvent.wheelDelta;//휠 상하 움직임 받아오기 
+        console.log(wheel);
+        if(wheel < 0 && scrollEvent==false && wheel_count < 6 ){
+            scrollEvent = true;
+            wheel_count++;
+            $("ul").stop().animate({
+                left: -moving*wheel_count+"px"
+            },{duration:200, complete: function(){
+                scrollEvent = false;
+            }});    
+        }else  if(wheel > 0 && scrollEvent==false && wheel_count > 0 ) {
+            scrollEvent = true;
+            wheel_count--;
+            $("ul").stop().animate({
+                left: -moving*wheel_count+"px"
+            },{duration:200, complete: function(){
+                scrollEvent = false;
+            }});    
+        }
+    });
+    $(window).resize(function(){
+        header_width = $("header").width();
+        moving = header_width*5/10;
+        $("ul").css({
+            left: -moving*wheel_count+"px"
+        });
+    });
+
+
+
+</script>
+</html>
